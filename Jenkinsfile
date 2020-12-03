@@ -1,16 +1,11 @@
-//
-// 파이프 라인의 시작
-//
 pipeline {
     // 스테이지 별로 다른 거
-    // 여기서 agent any = agent 누구나
     agent any
 
     triggers {
-        pollSCM('*/3 * * * *') // cron syntax 사용
+        pollSCM('*/3 * * * *')
     }
     // pipeline에 사용할 환경변수
-    // 여기서는 aws에 사용될 access_key, secret_access_key, region 변수값이 설정
     environment {
       AWS_ACCESS_KEY_ID = credentials('awsAccessKeyId')
       AWS_SECRET_ACCESS_KEY = credentials('awsSecretAccessKey')
@@ -123,7 +118,7 @@ pipeline {
 
             dir ('./server'){
                 sh """
-                docker build . -t server --build-arg env=${PROD}
+                docker build . -t server --build-arg env=${ENV}
                 """
             }
           }
@@ -150,7 +145,7 @@ pipeline {
 
           post {
             success {
-              mail  to: 'frontalnh@gmail.com',
+              mail  to: 'namils147@gmail.com',
                     subject: "Deploy Success",
                     body: "Successfully deployed!"
                   
